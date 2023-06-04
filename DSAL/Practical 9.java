@@ -1,57 +1,64 @@
 // Author : Arshad Khan
 // Instgram : khan0003.py
 
-package javaapplication1;
 import java.util.*;
-public class javaapplication1 {
-    private static int N;
-    public static void sort(int arr[]){
-        heapMethod(arr);
-        for (int i = N; i > 0; i--)	{
-            swap(arr,0, i);
-            N = N-1;
-            heap(arr, 0);
+
+public class Main {
+    private static int N = 20;
+
+    public static void maxHeapify(int arr[], int n, int i) {
+        int left = 2 * i;
+        int right = 2 * i + 1;
+        int largest = i;
+
+        if (left <= n && arr[left] > arr[largest]) {
+            largest = left;
         }
-    }
-    public static void heapMethod(int arr[]){
-        N = arr.length-1;
-        for (int i = N/2; i >= 0; i--)
-            heap(arr, i);
-    }
-    public static void heap(int arr[], int i)	{
-        int left = 2*i ;
-        int right = 2*i + 1;
-        int max = i;
-        if (left <= N && arr[left] > arr[i])
-            max = left;
-        if (right <= N && arr[right] > arr[max])
-            max = right;
-        if (max != i)	{
-            swap(arr, i, max);
-            heap(arr, max);
+
+        if (right <= n && arr[right] > arr[largest]) {
+            largest = right;
         }
-    }
-    public static void swap(int arr[], int i, int j){
-        int tmp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = tmp;
-    }
-    public static void main(String[] args) {
-        Scanner in = new Scanner( System.in );
-        int n;
-        System.out.println("Enter the number of elements to be sorted:");
-        n = in.nextInt();
-        int arr[] = new int[ n ];
-        System.out.println("Enter "+ n +" integer elements");
-        for (int i = 0; i < n; i++)
-            arr[i] = in.nextInt();
-        sort(arr);
-        System.out.println("After sorting ");
-        for (int i = 0; i < n; i++)
-            System.out.println(arr[i]+" ");
-        System.out.println();
+
+        if (largest != i) {
+            int temp = arr[i];
+            arr[i] = arr[largest];
+            arr[largest] = temp;
+            maxHeapify(arr, n, largest);
+        }
     }
 
+    public static void heapSort(int arr[], int n) {
+        for (int i = n / 2; i >= 1; i--) {
+            maxHeapify(arr, n, i);
+        }
+
+        for (int i = n; i >= 1; i--) {
+            int temp = arr[1];
+            arr[1] = arr[i];
+            arr[i] = temp;
+            maxHeapify(arr, i - 1, 1);
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] heap = new int[N];
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter how many numbers you want to insert: ");
+        int n = sc.nextInt();
+        System.out.println("Enter numbers: ");
+        for (int i = 1; i <= n; i++) {
+            int val = sc.nextInt();
+            heap[i] = val;
+        }
+
+        heapSort(heap, n);
+
+        System.out.println("Sorted numbers:");
+        for (int i = 1; i <= n; i++) {
+            System.out.println(heap[i]);
+        }
+    }
 }
 
 // ©arshad_khan
