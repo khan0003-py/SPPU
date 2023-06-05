@@ -1,136 +1,141 @@
-// Author : Arshad Khan
-// Instagram : khan0003.py
-
 #include<bits/stdc++.h>
 using namespace std;
 
-struct Node
-{
-    int data;
-    Node *left;
-    Node *right;
-    Node(int data)
-    {
-        this->data = data;
-        left = NULL;
-        right = NULL;
-    }
+class Node {
+public:
+	int data;
+	Node *right;
+	Node *left;
+
+	Node(int data) {
+		this->data = data;
+		right = NULL;
+		left = NULL;
+	}
 };
 
-void traversal(Node* root) 
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    else
-    {
-        cout << root->data << " ";
-        traversal(root->left);
-        traversal(root->right);
-    }
-}
+class BST {
+public:
+	Node *root = NULL;
+	void insert(int data) {
+		Node *temp = new Node(data);
+		if (this->root == NULL) {
+			this->root = temp;
+		} else {
+			Node *cur = this->root;
+			while (1) {
+				if (data >= cur->data) {
+					if (cur->right == NULL) {
+						cur->right = temp;
+						break;
+					}
+					cur = cur->right;
+				} else {
+					if (cur->left == NULL) {
+						cur->left = temp;
+						break;
+					}
+					cur = cur->left;
+				}
+			}
+		}
+	}
 
-Node* insert(Node* &root, int x)
-{
-    if (root == NULL)
-    {
-        root = new Node(x);
-    }
-    else if (x >= root->data)
-    {
-        root->right = insert(root->right, x);
-    }
-    else if (x < root->data)
-    {
-        root->left = insert(root->left, x);
-    }
-    return root;
-}
+	void traverse(Node *node) {
+		if (node == NULL) {
+			return;
+		}
 
-int height(Node* root)
-{
-    if (root == NULL)
-    {
-        return 0;
-    }    
-    int left_subtree = 1+height(root->left);
-    int right_subtree = 1+height(root->right);
-    return max(left_subtree, right_subtree);
-}
+		traverse(node->left);
+		cout << node->data << " ";
+		traverse(node->right);
 
-int minimum(Node* root)
-{
-    if (root->left == NULL)
-    {
-        return root->data;
-    }
-    return min(minimum(root->left), root->data);
-}
+	}
 
-void search(Node* root, int key, bool &present)
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    if (root->data == key)
-    {
-        present = true;
-    }
-    else if (root->data > key)
-    {
-        search(root->left, key, present);
-    }
-    else if (root->data <= key)
-    {
-        search(root->right, key, present);
-    }
-}
+	bool search(Node *node, int val) {
+		if (node == NULL) {
+			return false;
+		}
+		bool check = false;
 
-void mirror(Node* &root)
-{
-    if (root == NULL)
-    {
-        return;
-    }
-    mirror(root->left);
-    mirror(root->right);
-    swap(root->left, root->right);
-}
+		if (val >= node->data) {
+			check |= search(node->right, val);
+			if (node->data == val) {
+				return true;
+			}
+		} else {
+			check |= search(node->left, val);
+			if (node->data == val) {
+				return true;
+			}
+		}
 
-int main()
-{
-    Node *root = NULL;
-    int n;
-    cout << "Enter the number of nodes to be inserted in the BST-\n";
-    cin >> n;
-    for (int i = 0; i < n; i++)
-    {
-        int element;
-        cout << "Enter the data value to be inserted-\n";
-        cin >> element;
-        insert(root, element);
-    }
-    cout << "Displaying the elements of the BST-\n";
-    traversal(root);
-    cout << endl;
-    cout << "Height of the tree is " << height(root) << endl;
-    cout << "Minimum value in the BST is " << minimum(root) << endl;
-    int key;
-    cout << "Enter the data value to be searched in the BST-\n";
-    cin >> key;
-    bool present = false;
-    search(root, key, present);
-    if (present == true)
-    {
-        cout << "Key is present in the BST!" << endl;
-    }
-    else
-    {
-        cout << "Key is not present in the BST!" << endl;
-    }
-    return 0;
-}
+		return check;
+	}
 
-// ©arshad_khan
+	int minimum(Node *node) {
+
+		Node *temp;
+		temp = node;
+
+		if (temp->left == NULL) {
+			return temp->data;
+		}
+		minimum(temp->left);
+	}
+
+
+	int height(Node *node) {
+	    if (node == NULL) {
+	        return 0;
+	    }
+	    int heightRight = 1 + height(node->right);
+	    int heightLeft = 1 + height(node->left);
+
+	    return max(heightLeft, heightRight);
+	}
+
+
+	void swap(Node *node) {
+		if (node == NULL) {
+			return;
+		}
+		else{
+		swap(node->left);
+		swap(node->right);
+
+		Node *temp = node->right;
+		node->right = node->left;
+		node->left = temp;
+		}
+	}
+};
+
+int main() {
+
+	BST t;
+
+	t.insert(10);
+	t.insert(-1);
+	t.insert(15);
+	t.insert(3);
+	t.insert(10);
+	t.insert(1);
+	t.insert(15);
+	t.insert(3);
+
+	cout << "Tree Data : ";
+	t.traverse(t.root);
+
+	cout << endl << "Search Result : " << t.search(t.root, 19);
+
+	cout << endl << "Minimum Node : " << t.minimum(t.root);
+
+	cout << endl << "Height Of Tree : " << t.height(t.root);
+
+	cout << endl << "Tree Data After Swapping : ";
+	t.swap(t.root);
+	t.traverse(t.root);
+
+	return 0;
+}
