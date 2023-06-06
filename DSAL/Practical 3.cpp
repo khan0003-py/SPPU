@@ -1,110 +1,228 @@
 // Author : Arshad Khan
 // Instagram : khan0003.py
 
-#include <iostream>
-#include <string.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-struct node // Node Declaration
-{
-    string label;
-    //char label[10];
-    int ch_count;
-    struct node *child[10];
-} * root;
-
-class GT // Class Declaration
-{
-public:
-    void create_tree();
-    void display(node *r1);
-
-    GT()
-    {
-        root = NULL;
-    }
+struct node {
+	char name[20];
+	node *next;
+	node *down;
+	int flag;
 };
 
-void GT::create_tree()
-{
-    int tbooks, tchapters, i, j, k;
-    root = new node;
-    cout << "Enter name of book : ";
-    cin.get();
-    getline(cin, root->label);
-    cout << "Enter number of chapters in book : ";
-    cin >> tchapters;
-    root->ch_count = tchapters;
-    for (i = 0; i < tchapters; i++)
-    {
-        root->child[i] = new node;
-        cout << "Enter the name of Chapter " << i + 1 << " : ";
-        cin.get();
-        getline(cin, root->child[i]->label);
-        cout << "Enter number of sections in Chapter : " << root->child[i]->label << " : ";
-        cin >> root->child[i]->ch_count;
-        for (j = 0; j < root->child[i]->ch_count; j++)
-        {
-            root->child[i]->child[j] = new node;
-            cout << "Enter Name of Section " << j + 1 << " : ";
-            cin.get();
-            getline(cin, root->child[i]->child[j]->label);
-        }
-    }
+class GLL {
+	char ch[20];
+	int n, j;
+	node *head = NULL, *temp = NULL, *t1 = NULL, *t2 = NULL;
+public:
+	node* create();
+	void insertb();
+	void insertc();
+	void inserts();
+	void insertss();
+	void displayb();
+};
+
+node* GLL::create() {
+	node *p = new node();
+	p->next = NULL;
+	p->down = NULL;
+	p->flag = 0;
+	cout << endl << "Enter the name : ";
+	cin >> p->name;
+	return p;
 }
 
-void GT::display(node *r1)
-{
-    int i, j, k, tchapters;
-    if (r1 != NULL)
-    {
-        cout << "\n-----Book Hierarchy---";
-        cout << "\n Book title : " << r1->label;
-        tchapters = r1->ch_count;
-        for (i = 0; i < tchapters; i++)
-        {
-
-            cout << "\nChapter " << i + 1;
-            cout << " : " << r1->child[i]->label;
-            cout << "\nSections : ";
-            for (j = 0; j < r1->child[i]->ch_count; j++)
-            {
-                cout << "\n"<< r1->child[i]->child[j]->label;
-            }
-        }
-    }
-    cout << endl;
+void GLL::insertb() {
+	if (head == NULL) {
+		t1 = create();
+		head = t1;
+	} else {
+		cout << endl << "Book Exist!!";
+	}
 }
 
-int main()
-{
-    int choice;
-    GT gt;
-    while (1)
-    {
-        cout << "-----------------" << endl;
-        cout << "Book Tree Creation" << endl;
-        cout << "-----------------" << endl;
-        cout << "1.Create" << endl;
-        cout << "2.Display" << endl;
-        cout << "3.Quit" << endl;
-        cout << "Enter your choice : ";
-        cin >> choice;
-        switch (choice)
-        {
-        case 1:
-            gt.create_tree();
-        case 2:
-            gt.display(root);
-            break;
-        case 3:
-            cout << "Thanks for using this program!!!";
-            exit(1);
-        default:
-            cout << "Wrong choice!!!" << endl;
-        }
-    }
-    return 0;
+void GLL::insertc() {
+	if (head == NULL) {
+		cout << endl << "There is no book is exist.";
+	} else {
+		cout << endl << "How many chapters you want to insert : ";
+		cin >> n;
+		for (int i = 0; i < n; i++) {
+			t1 = create();
+			if (head->flag == 0) {
+				head->down = t1;
+				head->flag = 1;
+			} else {
+				temp = head;
+				temp = temp->down;
+				while (temp->next != NULL) {
+					temp = temp->next;
+				}
+				temp->next = t1;
+			}
+		}
+	}
 }
+
+void GLL::inserts() {
+	if (head == NULL) {
+		cout << endl << "There is no book available";
+	} else {
+		cout << endl
+				<< "Enter the name of chapter on which you want to insert the section : ";
+		cin >> ch;
+		temp = head;
+		if (temp->flag == 0) {
+			cout << endl << "No chapter on book is available";
+		} else {
+			temp = temp->down;
+			while (temp != NULL) {
+				if (!strcmp(ch, temp->name)) {
+					cout << endl << "How many sections you want to insert : ";
+					cin >> n;
+					for (int i = 0; i < n; i++) {
+						t1 = create();
+						if (temp->flag == 0) {
+							temp->down = t1;
+							temp->flag = 1;
+							t2 = temp->down;
+						} else {
+							while (t2->next != NULL) {
+								t2 = t2->next;
+							}
+							t2->next = t1;
+						}
+					}
+					break;
+				}
+				temp = temp->next;
+			}
+		}
+	}
+}
+
+void GLL::insertss() {
+	if (temp->next == NULL) {
+		cout << endl << "There is no books exist";
+	} else {
+		temp = head;
+		cout << endl
+				<< "Enter name of chapter on which you want to insert sub section";
+		cin >> ch;
+		if (temp->flag == 0) {
+			cout << endl << "There is no chapter in the book";
+		} else {
+			temp = temp->down;
+			while (temp != NULL) {
+				if (!strcmp(ch, temp->name)) {
+					cout << endl
+							<< "Enter the name of section on which you want to insert sub section";
+					cin >> ch;
+					if (temp->flag == 0) {
+						cout << endl << "There is no section";
+					} else {
+						temp = temp->down;
+						while (temp != NULL) {
+							if (!strcmp(ch, temp->name)) {
+								cout
+										<< "Enter how many sub section you want to enter : ";
+								cin >> n;
+								for (int i = 0; i < n; i++) {
+									t1 = create();
+									if (temp->flag == 0) {
+										temp->down = t1;
+										temp->flag = 1;
+										t2 = temp->down;
+									} else {
+										while (t2->next != NULL) {
+											t2 = t2->next;
+										}
+										t2->next = t1;
+									}
+								}
+								break;
+
+							}
+							temp = temp->next;
+						}
+					}
+				}
+				temp = temp->next;
+			}
+		}
+	}
+}
+
+void GLL::displayb() {
+	if (head == NULL) {
+		cout << endl << "There is no book present";
+	} else {
+		temp = head;
+		cout << endl << "Name of book : " << temp->name;
+		if (temp->flag == 1) {
+			temp = temp->down;
+			while (temp != NULL) {
+				cout << endl << "\t Name of chapter : " << temp->name;
+				t1 = temp;
+				if (t1->flag == 1) {
+					t1 = t1->down;
+					while (t1 != NULL) {
+						cout << endl << "\t\t Name of section : " << t1->name;
+						t2 = t1;
+						if (t2->flag == 1) {
+							t2 = t2->down;
+							while (t2 != NULL) {
+								cout << endl << "\t\t\t Name of sub section : "
+										<< t2->name;
+								t2 = t2->next;
+							}
+						}
+						t1 = t1->next;
+					}
+				}
+				temp = temp->next;
+			}
+		}
+	}
+	cout << endl;
+}
+
+int main() {
+	GLL g;
+	int x;
+	while (1) {
+		cout << endl << endl << "1. Insert Book.";
+		cout << endl << "2. Insert Chapter.";
+		cout << endl << "3. Insert Section.";
+		cout << endl << "4. Insert Sub-Section.";
+		cout << endl << "5. Display Book.";
+		cout << endl << "6. Exit" << endl << endl;
+		cin >> x;
+
+		switch (x) {
+		case 1:
+			g.insertb();
+			break;
+		case 2:
+			g.insertc();
+			break;
+		case 3:
+			g.inserts();
+			break;
+		case 4:
+			g.insertss();
+			break;
+		case 5:
+			g.displayb();
+			break;
+		case 6:
+			exit(0);
+		}
+	}
+	return 0;
+}
+
 
 // ©arshad_khan
